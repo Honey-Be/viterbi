@@ -8,11 +8,12 @@
             "type": "shell",
             "command": "g++",
             "args": [
-                "-o", "main", "main.cpp"
+                "-o", "main", "main.cpp", "fileutil.cpp"
             ],
             "group": {
                 "kind": "build",
                 "isDefault": true
             }
         }
-    ]}
+    ]
+}
