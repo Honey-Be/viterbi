@@ -40,6 +40,7 @@ void readUnigram() {
     string voca = "";
     double prob = 0;
     vector<int> indexes;
+    vector<int>::iterator index;
 
     while(!in.eof()) {
         prob = -1;
@@ -47,8 +48,8 @@ void readUnigram() {
         if (prob < 0) break;
 
         findIndexesByName(voca, indexes);
-        for(int index : indexes) {
-            unigram[index] = prob * WORD_TRANS_WEIGHT;
+        for(index = indexes.begin(); index != indexes.end(); index++) {
+            unigram[*index] = prob * WORD_TRANS_WEIGHT;
         }
         
     }
@@ -62,6 +63,7 @@ void readBigram() {
     string voca1 = "", voca2 = "";
     double prob = 0;
     vector<int> indexes1, indexes2;
+    vector<int>::iterator source, dest;
 
     while(!in.eof()) {
         prob = -1;
@@ -70,9 +72,9 @@ void readBigram() {
 
         findIndexesByName(voca1, indexes1);
         findIndexesByName(voca2, indexes2);     
-        for (int source : indexes1) {
-            for (int dest : indexes2) {
-                bigram[source][dest] = prob * WORD_TRANS_WEIGHT;
+        for (source = indexes1.begin(); source != indexes1.end(); source++) {
+            for (dest = indexes2.begin(); dest != indexes2.end(); dest++) {
+                bigram[*source][*dest] = prob * WORD_TRANS_WEIGHT;
             }
         }
     }
