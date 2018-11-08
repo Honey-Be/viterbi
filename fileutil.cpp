@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int listFiles (string dir, vector<string> &files) {
+int listFilePaths (string dir, vector<string> &files) {
     DIR *dp;
     struct dirent *dirp;
     if((dp  = opendir(dir.c_str())) == NULL) {
@@ -19,7 +19,7 @@ int listFiles (string dir, vector<string> &files) {
         if (dirp->d_type == DT_DIR) {
             if (strcmp(dirp->d_name, ".") == 0 || strcmp(dirp->d_name, "..") == 0) continue;
             string childDir = dir + "/" + string(dirp->d_name);
-            listFiles(childDir, files);
+            listFilePaths(childDir, files);
         } else {
             files.push_back(dir + "/" + string(dirp->d_name));
         }
@@ -28,7 +28,7 @@ int listFiles (string dir, vector<string> &files) {
     return 0;
 }
 
-int listInputFiles(vector<string> &files) {
+int listAllInputPaths(vector<string> &files) {
     string testDir = string("tst");
-    return listFiles(testDir, files);
+    return listFilePaths(testDir, files);
 }

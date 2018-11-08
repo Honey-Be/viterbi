@@ -16,4 +16,6 @@ struct valueType {
 
 extern valueType values[MAX_TIME_LENGTH][N_VOCA][N_PHONE][N_STATE];
 
+void runViterbi(int length, int spectrogram[][N_DIMENSION], vector<string> &result);
+
 #endif

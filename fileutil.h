@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int listFiles (string dir, vector<string> &files);
-int listInputFiles(vector<string> &files);
+int listFilePaths (string dir, vector<string> &files);
+int listAllInputPaths (vector<string> &files);
 
 #endif
