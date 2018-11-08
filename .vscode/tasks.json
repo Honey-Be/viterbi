@@ -8,7 +8,7 @@
             "type": "shell",
             "command": "g++",
             "args": [
-                "-o", "main", "main.cpp", "phone.cpp", "fileutil.cpp", "voca.cpp", "transition.cpp", "observation.cpp"
+                "-o", "main", "main.cpp", "phone.cpp", "fileutil.cpp", "voca.cpp", "transition.cpp", "observation.cpp", "viterbi.cpp"
             ],
             "group": {
                 "kind": "build",

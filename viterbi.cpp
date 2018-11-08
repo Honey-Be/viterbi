@@ -1,0 +1,109 @@
+#include "viterbi.h"
+
+using namespace std;
+
+valueType values[MAX_TIME_LENGTH][N_VOCA][N_PHONE][N_STATE];
+
+void resetValues(int length) {
+    int t, v, p, s;
+    for (t = 0; t < length; t++) {
+        for (v = 0; v < N_VOCA; v++) {
+            for (p = 0; p < N_PHONE; p++) {
+                for (s = 0; s < N_STATE; s++) {
+                    values[t][v][p][s].isAssigned = false;
+                }
+            }
+        }
+    }
+}
+
+double observationProb[N_PHONE][N_STATE];
+
+void memoizeObservationProbs(int spectrum[]) {
+    int p, s;
+    int n_state;
+    for (p = 0; p < N_PHONE; p++) {
+        n_state = getNumberOfPhoneState(p);
+        for (s = 0; s < n_state; s++) {
+            observationProb[p][s] = getObservationProb(p, s, spectrum);
+        }
+    }
+}
+
+valueType getMaxValue(int lastTimeIndex) {
+    int v, p, s;
+    valueType max;
+    max.isAssigned = false;
+    for (v = 0; v < N_VOCA; v++) {
+        for (p = 0; p < vocas[v].n_phones; p++) {
+            int p_index = getPhoneIndex(vocas[v].phones[p]);
+            int n_state = getNumberOfPhoneState(p_index);
+            for (s = 0; s < n_state; s++) {
+                if (!values[lastTimeIndex][v][p][s].isAssigned) continue;
+                if (!max.isAssigned || max.prob < values[lastTimeIndex][v][p][s].prob) {
+                    max.isAssigned = true;
+                    max.prob = values[lastTimeIndex][v][p][s].prob;
+                    max.prevVoca = v;
+                    max.prevPhone = p;
+                    max.prevState = s;
+                }
+            }
+        }
+    }
+
+    return max;
+}
+
+void backtrace(int t, int v, int p, int s, vector<string> &result) {
+    if (t < 0) return;
+    
+    valueType *value = &values[t][v][p][s];
+    backtrace(t-1, value->prevVoca, value->prevPhone, value->prevState, result);
+    if (t == 0 || value->prevVoca != v) result.push_back(vocas[v].name);
+}
+
+void runViterbi(int length, int spectrogram[][N_DIMENSION], vector<string> &result) {
+    int t, v, p, s;
+    vector<transitionType>::iterator trans;
+    valueType * value;
+    double currentProb, prevProb;
+
+    memoizeObservationProbs(spectrogram[0]);
+    for (trans = beginningTransitions.begin(); trans != beginningTransitions.end(); trans++) {
+        value = &values[0][trans->voca][trans->phone][trans->state];
+        currentProb = trans->prob + observationProb[trans->phone][trans->state];
+        if(!value->isAssigned || value->prob < currentProb) {
+            value->isAssigned = true;
+            value->prob = currentProb;
+        }
+    }
+
+    for (t = 0; t < length - 1; t++) {
+        memoizeObservationProbs(spectrogram[t + 1]);
+        for (v = 0; v < N_VOCA; v++) {
+            for (p = 0; p < vocas[v].n_phones; p++) {
+                int p_index = getPhoneIndex(vocas[v].phones[p]);
+                int n_state = getNumberOfPhoneState(p_index);
+                for (s = 0; s < n_state; s++) {
+                    if (!values[t][v][p][s].isAssigned) continue;
+                    prevProb = values[t][v][p][s].prob;
+                    for (trans = transitions[v][p][s].begin(); trans != transitions[v][p][s].end(); trans++) {
+                        value = &values[t+1][trans->voca][trans->phone][trans->state];
+                        currentProb = prevProb + trans->prob + observationProb[trans->phone][trans->state];
+                        if (!value->isAssigned || value->prob < currentProb) {
+                            value->isAssigned = true;
+                            value->prob = currentProb;
+
+                            value->prevVoca = v;
+                            value->prevPhone = p;
+                            value->prevState = s;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    valueType max = getMaxValue(length - 1);
+    backtrace(length - 1, max.prevVoca, max.prevPhone, max.prevState, result);
+}
