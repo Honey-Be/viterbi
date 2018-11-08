@@ -2,6 +2,6 @@
 #define OBSERVATION_H_
 
 // get log observation probability of spectrum vector
-double getObservationProb(int phone, int state, int spectrum[]);
+double getObservationProb(int phone, int state, double spectrum[]);
 
 #endif

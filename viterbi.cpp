@@ -19,7 +19,7 @@ void resetValues(int length) {
 
 double observationProb[N_PHONE][N_STATE];
 
-void memoizeObservationProbs(int spectrum[]) {
+void memoizeObservationProbs(double spectrum[]) {
     int p, s;
     int n_state;
     for (p = 0; p < N_PHONE; p++) {
@@ -62,7 +62,7 @@ void backtrace(int t, int v, int p, int s, vector<string> &result) {
     if (t == 0 || value->prevVoca != v) result.push_back(vocas[v].name);
 }
 
-void runViterbi(int length, int spectrogram[][N_DIMENSION], vector<string> &result) {
+void runViterbi(int length, double spectrogram[][N_DIMENSION], vector<string> &result) {
     int t, v, p, s;
     vector<transitionType>::iterator trans;
     valueType * value;
