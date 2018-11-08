@@ -29,7 +29,6 @@ typedef struct {
 extern phoneType phones[N_PHONE];
 
 int getPhoneIndex(string name);
-int getNumberOfPhoneState(string name);
-double getPhoneTransProb(string name, int source, int dest);
+int getNumberOfPhoneState(int index);
 
 #endif

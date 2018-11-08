@@ -975,13 +975,7 @@ int getPhoneIndex(string name) {
   return -1; // if there's no phone with given name
 }
 
-int getNumberOfPhoneState(string name) {
-  if (name == "sp") return 1;
+int getNumberOfPhoneState(int index) {
+  if (index == 17) return 1; // "sp"
   return 3;
-}
-
-double getPhoneTransProb(string name, int source, int dest) {
-  int index = getPhoneIndex(name);
-  if (index < 0) return 0;
-  return (double)(phones[index].tp[source][dest]);
 }
