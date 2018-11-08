@@ -91,7 +91,7 @@ void initAllTransitions() {
            int next_p_index = getPhoneIndex(next_p_name);
            int next_p_n_state = getNumberOfPhoneState(next_p_index);
            t.voca = v;
-           t.phone = p;
+           t.phone = p + 1;
            for (int s = 0; s < p_n_state; s++) {
                for (int next_s = 0; next_s < next_p_n_state; next_s++) {
                    t.state = next_s;

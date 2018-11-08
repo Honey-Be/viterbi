@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <iostream>
 #include <string>
 #include <vector>
 #include "fileutil.h"
@@ -41,7 +42,7 @@ void runAllTests() {
     int count = 0;
     for (inputPath = inputPaths.begin(); inputPath != inputPaths.end(); inputPath++) {
         count++;
-        // if(count > 100) break;
+        if(count % 100 == 0) printf("%.2lf%%..\n", (double)count / (double)inputPaths.size() * 100);
         readTestInput(*inputPath);
 
         fprintf(out, "%s\n", getRecName(*inputPath).c_str());
@@ -57,6 +58,8 @@ void runAllTests() {
         fprintf(out, ".\n");
     }
 
+    printf("100%%\n");
+
     fclose(out);
 }
 
@@ -65,5 +68,6 @@ int main()
     initAllTransitions();
     listAllInputPaths(inputPaths);
     runAllTests();
+    
     return 0;
 }
