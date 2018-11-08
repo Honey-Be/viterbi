@@ -4,25 +4,25 @@
 #include "observation.h"
 
 // get log probability for one probability density function. O(N_DIMENSION)
-double probForOnePDF(int phone, int state, int pdf, int x[N_DIMENSION]) {
+double probForOnePDF(int phone, int state, int pdf, int spectrum[N_DIMENSION]) {
     double sum = 0;
     double * mean = phones[phone].state[state].pdf[pdf].mean;
     double * var = phones[phone].state[state].pdf[pdf].var;
 
     for (int d = 0; d < N_DIMENSION; d++) {
-        sum -= -log(var[d])/2.0 - (x[d] - mean[d]) * (x[d] - mean[d]) / (2 * var[d]);
+        sum -= -log(var[d])/2.0 - (spectrum[d] - mean[d]) * (spectrum[d] - mean[d]) / (2 * var[d]);
     }
 
     return sum;
 }
 
 // O(N_DIMENSION * N_PDF)
-double getObservationProb(int phone, int state, int x[N_DIMENSION]) {
+double getObservationProb(int phone, int state, int spectrum[N_DIMENSION]) {
     double probs[N_PDF];
 
     cout << "probs: ";
     for (int pdf = 0; pdf < N_PDF; pdf++) {
-        probs[pdf] = probForOnePDF(phone, state, pdf, x);
+        probs[pdf] = probForOnePDF(phone, state, pdf, spectrum);
         cout << probs[pdf] << " ";
     }
     cout << endl;
