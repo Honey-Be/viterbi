@@ -2,6 +2,9 @@
 # Created by https://www.gitignore.io/api/git,vim,c++,linux,macos,intellij+all,jetbrains+all
 # Edit at https://www.gitignore.io/?templates=git,vim,c++,linux,macos,intellij+all,jetbrains+all
 
+# Execution File
+main
+
 ### C++ ###
 # Prerequisites
 *.d
