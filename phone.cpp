@@ -1,6 +1,10 @@
-#include "hmm.h"
+#include "phone.h"
 
-hmmType phones[] = {
+#include <string>
+
+using namespace std;
+
+phoneType phones[N_PHONE] = {
   { "f", // HMM
     { // transition probability
       { 0.000000e+000, 1.000000e+000, 0.000000e+000, 0.000000e+000, 0.000000e+000 },
@@ -963,3 +967,21 @@ hmmType phones[] = {
     }
   },
 };
+
+int getPhoneIndex(string name) {
+  for (int i = 0; i < N_PHONE; i++) {
+    if(phones[i].name == name) return i;
+  }
+  return -1; // if there's no phone with given name
+}
+
+int getNumberOfPhoneState(string name) {
+  if (name == "sp") return 1;
+  return 3;
+}
+
+double getPhoneTransProb(string name, int source, int dest) {
+  int index = getPhoneIndex(name);
+  if (index < 0) return 0;
+  return (double)(phones[index].tp[source][dest]);
+}

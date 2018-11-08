@@ -1,6 +1,7 @@
-#ifndef HMM_H_
-#define HMM_H_
+#ifndef PHONE_H_
+#define PHONE_H_
 
+#define N_PHONE 21
 #define N_STATE		3
 #define N_PDF		2
 #define N_DIMENSION	39
@@ -23,8 +24,12 @@ typedef struct {
   string name;
   float tp[N_STATE+2][N_STATE+2];
   stateType state[N_STATE];
-} hmmType;
+} phoneType;
 
-extern hmmType phones[];
+extern phoneType phones[N_PHONE];
+
+int getPhoneIndex(string name);
+int getNumberOfPhoneState(string name);
+double getPhoneTransProb(string name, int source, int dest);
 
 #endif
