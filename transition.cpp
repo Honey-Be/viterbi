@@ -43,13 +43,14 @@ void applyLogScale() {
 void initAllTransitions() {
     transitionType t;
 
-    // read and initialize unigram, bigram 
+    // read and initialize unigram, bigram, indexes of vocabulary phones.
     readUnigram();
     readBigram();
+    initPhoneIndex();
 
     // initialize beginning transitions
     for (int v = 0; v < N_VOCA; v++) {
-        int p_index = getPhoneIndex(vocas[v].phones[0]);
+        int p_index = phoneIndex[v][0];
         int n_state = getNumberOfPhoneState(p_index);
         for (int s = 0; s < n_state; s++) {
             t.voca = v;
@@ -65,8 +66,7 @@ void initAllTransitions() {
     // case 0. every transitions of each phone hmm
     for (int v = 0; v < N_VOCA; v++) {
         for (int p = 0; p < vocas[v].n_phones; p++) {
-            string p_name = vocas[v].phones[p];
-            int p_index = getPhoneIndex(p_name);
+            int p_index = phoneIndex[v][p];
             int n_state = getNumberOfPhoneState(p_index);
             for (int s = 0; s < n_state; s++) {
                 for (int d = 0; d < n_state; d++) {
@@ -83,12 +83,10 @@ void initAllTransitions() {
     // case 1. phone to next phone in same voca
     for (int v = 0; v < N_VOCA; v++) {
         for (int p = 0; p < vocas[v].n_phones - 1; p++) {
-           string p_name = vocas[v].phones[p];
-           int p_index = getPhoneIndex(p_name);
+           int p_index = phoneIndex[v][p];
            int p_n_state = getNumberOfPhoneState(p_index);
 
-           string next_p_name = vocas[v].phones[p+1];
-           int next_p_index = getPhoneIndex(next_p_name);
+           int next_p_index = phoneIndex[v][p+1];
            int next_p_n_state = getNumberOfPhoneState(next_p_index);
            t.voca = v;
            t.phone = p + 1;
@@ -106,8 +104,7 @@ void initAllTransitions() {
     for (int v = 0; v < N_VOCA; v++) {
         int p = vocas[v].n_phones - 1;
 
-        string p_name = vocas[v].phones[p];
-        int p_index = getPhoneIndex(p_name);
+        int p_index = phoneIndex[v][p];
         int p_n_state = getNumberOfPhoneState(p_index);
 
         // add transitions from current voca's last phone to next voca's first phone
@@ -115,8 +112,7 @@ void initAllTransitions() {
             t.voca = nextv;
             t.phone = 0;
 
-            string next_p_name = vocas[nextv].phones[0];
-            int next_p_index = getPhoneIndex(next_p_name);
+            int next_p_index = phoneIndex[nextv][0];
             int next_p_n_state = getNumberOfPhoneState(next_p_index);
 
             for (int s = 0; s < p_n_state; s++) {
@@ -129,22 +125,20 @@ void initAllTransitions() {
         }
 
         if (vocas[v].phones[p] == "sp" && p > 0) {
-            // If the last phone is "sp", we can skip it
-            int sp_index = getPhoneIndex("sp");
+            // If the last phone is "sp", then we can skip it
+            int sp_index = phoneIndex[v][p];
             double skipProb = phones[sp_index].tp[0][2];
 
             p--;
 
-            p_name = vocas[v].phones[p];
-            p_index = getPhoneIndex(p_name);
+            p_index = phoneIndex[v][p];
             p_n_state = getNumberOfPhoneState(p_index);
 
             for (int nextv = 0; nextv < N_VOCA; nextv++) {
                 t.voca = nextv;
                 t.phone = 0;
 
-                string next_p_name = vocas[nextv].phones[0];
-                int next_p_index = getPhoneIndex(next_p_name);
+                int next_p_index = phoneIndex[nextv][0];
                 int next_p_n_state = getNumberOfPhoneState(next_p_index);
 
                 for (int s = 0; s < p_n_state; s++) {

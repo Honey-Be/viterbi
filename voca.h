@@ -18,11 +18,14 @@ struct vocaType {
 };
 
 extern vocaType vocas[N_VOCA];
+extern int phoneIndex[N_VOCA][MAX_PHONES];
 
 extern double unigram[N_VOCA];
 extern double bigram[N_VOCA][N_VOCA];
 
 void readUnigram();
 void readBigram();
+
+void initPhoneIndex();
 
 #endif

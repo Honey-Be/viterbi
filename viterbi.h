@@ -14,7 +14,7 @@ struct valueType {
     int prevState;
 };
 
-extern valueType values[MAX_TIME_LENGTH][N_VOCA][N_PHONE][N_STATE];
+extern valueType values[MAX_TIME_LENGTH][N_VOCA][MAX_PHONES][N_STATE];
 
 void runViterbi(int length, double spectrogram[][N_DIMENSION], vector<string> &result);
 

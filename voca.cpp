@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include "voca.h"
+#include "phone.h"
 
 using namespace std;
 
@@ -20,6 +21,8 @@ vocaType vocas[N_VOCA] = {
     {"zero", 5, {"z", "ih", "r", "ow", "sp"}},
     {"zero", 5, {"z", "iy", "r", "ow", "sp"}}
 };
+
+int phoneIndex[N_VOCA][MAX_PHONES];
 
 double unigram[N_VOCA];
 double bigram[N_VOCA][N_VOCA];
@@ -80,4 +83,12 @@ void readBigram() {
     }
 
     in.close();
+}
+
+void initPhoneIndex() {
+    for (int v = 0; v < N_VOCA; v++) {
+        for (int p = 0; p < vocas[v].n_phones; p++) {
+            phoneIndex[v][p] = getPhoneIndex(vocas[v].phones[p]);
+        }
+    }
 }

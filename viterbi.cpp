@@ -2,13 +2,13 @@
 
 using namespace std;
 
-valueType values[MAX_TIME_LENGTH][N_VOCA][N_PHONE][N_STATE];
+valueType values[MAX_TIME_LENGTH][N_VOCA][MAX_PHONES][N_STATE];
 
 void resetValues(int length) {
     int t, v, p, s;
     for (t = 0; t < length; t++) {
         for (v = 0; v < N_VOCA; v++) {
-            for (p = 0; p < N_PHONE; p++) {
+            for (p = 0; p < MAX_PHONES; p++) {
                 for (s = 0; s < N_STATE; s++) {
                     values[t][v][p][s].isAssigned = false;
                 }
@@ -36,7 +36,7 @@ valueType getMaxValue(int lastTimeIndex) {
     max.isAssigned = false;
     for (v = 0; v < N_VOCA; v++) {
         for (p = 0; p < vocas[v].n_phones; p++) {
-            int p_index = getPhoneIndex(vocas[v].phones[p]);
+            int p_index = phoneIndex[v][p];
             int n_state = getNumberOfPhoneState(p_index);
             for (s = 0; s < n_state; s++) {
                 if (!values[lastTimeIndex][v][p][s].isAssigned) continue;
@@ -59,7 +59,7 @@ void backtrace(int t, int v, int p, int s, vector<string> &result) {
     
     valueType *value = &values[t][v][p][s];
     backtrace(t-1, value->prevVoca, value->prevPhone, value->prevState, result);
-    if (t == 0 || (s == 0 && p == 0 && value->prevState != 0)) result.push_back(vocas[v].name);
+    if (t == 0 || (s == 0 && p == 0 && (value->prevState != 0 || value->prevPhone != 0))) result.push_back(vocas[v].name);
 }
 
 void runViterbi(int length, double spectrogram[][N_DIMENSION], vector<string> &result) {
@@ -67,6 +67,7 @@ void runViterbi(int length, double spectrogram[][N_DIMENSION], vector<string> &r
     vector<transitionType>::iterator trans;
     valueType * value;
     double currentProb, prevProb;
+    int next_p_index;
 
     resetValues(length);
 
@@ -84,14 +85,15 @@ void runViterbi(int length, double spectrogram[][N_DIMENSION], vector<string> &r
         memoizeObservationProbs(spectrogram[t + 1]);
         for (v = 0; v < N_VOCA; v++) {
             for (p = 0; p < vocas[v].n_phones; p++) {
-                int p_index = getPhoneIndex(vocas[v].phones[p]);
+                int p_index = phoneIndex[v][p];
                 int n_state = getNumberOfPhoneState(p_index);
                 for (s = 0; s < n_state; s++) {
                     if (!values[t][v][p][s].isAssigned) continue;
                     prevProb = values[t][v][p][s].prob;
                     for (trans = transitions[v][p][s].begin(); trans != transitions[v][p][s].end(); trans++) {
                         value = &values[t+1][trans->voca][trans->phone][trans->state];
-                        currentProb = prevProb + trans->prob + observationProb[trans->phone][trans->state];
+                        next_p_index = phoneIndex[trans->voca][trans->phone];
+                        currentProb = prevProb + trans->prob + observationProb[next_p_index][trans->state];
                         if (!value->isAssigned || value->prob < currentProb) {
                             value->isAssigned = true;
                             value->prob = currentProb;
