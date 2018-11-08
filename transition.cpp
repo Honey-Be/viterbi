@@ -37,7 +37,7 @@ void initAllTransitions() {
             t.phone = 0;
             t.state = s;
             t.prob = unigram[v] * getBeginningProb(p_index, s);
-            beginningTransitions.push_back(t);
+            if (t.prob > 0) beginningTransitions.push_back(t);
         }
     }
 
@@ -55,7 +55,7 @@ void initAllTransitions() {
                     t.phone = p;
                     t.state = d;
                     t.prob = getTransProb(p_index, s, d);
-                    transitions[v][p][s].push_back(t);
+                    if (t.prob > 0) transitions[v][p][s].push_back(t);
                 }
             }
         }
@@ -77,7 +77,7 @@ void initAllTransitions() {
                for (int next_s = 0; next_s < next_p_n_state; next_s++) {
                    t.state = next_s;
                    t.prob = getEndingProb(p_index, s) * getBeginningProb(next_p_index, next_s);
-                   transitions[v][p][s].push_back(t);
+                   if (t.prob > 0) transitions[v][p][s].push_back(t);
                }
            }
         }
@@ -104,7 +104,7 @@ void initAllTransitions() {
                 for (int next_s = 0; next_s < next_p_n_state; next_s++) {
                     t.state = next_s;
                     t.prob = getEndingProb(p_index, s) * bigram[v][nextv] * getBeginningProb(next_p_index, next_s);
-                    transitions[v][p][s].push_back(t);
+                    if (t.prob > 0) transitions[v][p][s].push_back(t);
                 }
             }
         }
@@ -132,7 +132,7 @@ void initAllTransitions() {
                     for (int next_s = 0; next_s < next_p_n_state; next_s++) {
                         t.state = next_s;
                         t.prob = getEndingProb(p_index, s) * skipProb * bigram[v][nextv] * getBeginningProb(next_p_index, next_s);
-                        transitions[v][p][s].push_back(t);
+                        if (t.prob > 0) transitions[v][p][s].push_back(t);
                     }
                 }
             }
