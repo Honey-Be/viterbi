@@ -7,7 +7,7 @@
 #define MAX_PHONES 6
 
  // it's a value about word penalty.
-#define WORD_TRANS_WEIGHT 1
+#define WORD_TRANS_WEIGHT 0.4e-31
 
 using namespace std;
 
@@ -19,7 +19,6 @@ struct vocaType {
 
 extern vocaType vocas[N_VOCA];
 extern int phoneIndex[N_VOCA][MAX_PHONES];
-
 extern double unigram[N_VOCA];
 extern double bigram[N_VOCA][N_VOCA];
 

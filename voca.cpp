@@ -11,7 +11,7 @@ vocaType vocas[N_VOCA] = {
     {"eight", 3, {"ey", "t", "sp"}},
     {"five", 4, {"f", "ay", "v", "sp"}},
     {"four", 4, {"f", "ao", "r", "sp"}},
-    {"nine", 4, {"f", "ay", "n", "sp"}},
+    {"nine", 4, {"n", "ay", "n", "sp"}},
     {"oh", 2, {"ow", "sp"}},
     {"one", 4, {"w", "ah", "n", "sp"}},
     {"seven", 6, {"s", "eh", "v", "ah", "n", "sp"}},

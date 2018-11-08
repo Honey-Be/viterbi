@@ -12,6 +12,7 @@ struct valueType {
     int prevVoca;
     int prevPhone;
     int prevState;
+    bool wordChanged;
 };
 
 extern valueType values[MAX_TIME_LENGTH][N_VOCA][MAX_PHONES][N_STATE];

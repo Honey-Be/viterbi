@@ -48,6 +48,7 @@ void initAllTransitions() {
     readBigram();
     initPhoneIndex();
 
+    t.toNextWord = false;
     // initialize beginning transitions
     for (int v = 0; v < N_VOCA; v++) {
         int p_index = phoneIndex[v][0];
@@ -100,6 +101,7 @@ void initAllTransitions() {
         }
     }
 
+    t.toNextWord = true;
     // case 2. last phone to next voca
     for (int v = 0; v < N_VOCA; v++) {
         int p = vocas[v].n_phones - 1;

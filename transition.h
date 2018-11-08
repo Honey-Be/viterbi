@@ -15,6 +15,8 @@ struct transitionType {
 
     // log transition probability
     double prob;
+
+    bool toNextWord;
 };
 
 // transitions from beginning

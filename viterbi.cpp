@@ -59,7 +59,9 @@ void backtrace(int t, int v, int p, int s, vector<string> &result) {
     
     valueType *value = &values[t][v][p][s];
     backtrace(t-1, value->prevVoca, value->prevPhone, value->prevState, result);
-    if (t == 0 || (s == 0 && p == 0 && (value->prevState != 0 || value->prevPhone != 0))) result.push_back(vocas[v].name);
+
+    if (value->wordChanged)
+        result.push_back(vocas[value->prevVoca].name);
 }
 
 void runViterbi(int length, double spectrogram[][N_DIMENSION], vector<string> &result) {
@@ -101,6 +103,8 @@ void runViterbi(int length, double spectrogram[][N_DIMENSION], vector<string> &r
                             value->prevVoca = v;
                             value->prevPhone = p;
                             value->prevState = s;
+
+                            value->wordChanged = trans->toNextWord;
                         }
                     }
                 }
