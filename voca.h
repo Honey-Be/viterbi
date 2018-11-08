@@ -6,6 +6,9 @@
 #define N_VOCA 13
 #define MAX_PHONES 6
 
+ // it's a value about word penalty.
+#define WORD_TRANS_WEIGHT 1
+
 using namespace std;
 
 struct vocaType {

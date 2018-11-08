@@ -48,7 +48,7 @@ void readUnigram() {
 
         findIndexesByName(voca, indexes);
         for(int index : indexes) {
-            unigram[index] = prob;
+            unigram[index] = prob * WORD_TRANS_WEIGHT;
         }
         
     }
@@ -72,7 +72,7 @@ void readBigram() {
         findIndexesByName(voca2, indexes2);     
         for (int source : indexes1) {
             for (int dest : indexes2) {
-                bigram[source][dest] = prob;
+                bigram[source][dest] = prob * WORD_TRANS_WEIGHT;
             }
         }
     }

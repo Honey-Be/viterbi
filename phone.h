@@ -11,9 +11,9 @@
 using namespace std;
 
 typedef struct {
-  float weight;
-  float mean[N_DIMENSION];
-  float var[N_DIMENSION];
+  double weight;
+  double mean[N_DIMENSION];
+  double var[N_DIMENSION];
 } pdfType;
 
 typedef struct {
@@ -22,7 +22,7 @@ typedef struct {
 
 typedef struct {
   string name;
-  float tp[N_STATE+2][N_STATE+2];
+  double tp[N_STATE+2][N_STATE+2];
   stateType state[N_STATE];
 } phoneType;
 
