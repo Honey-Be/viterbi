@@ -1,3 +1,4 @@
+#include <math.h>
 #include "transition.h"
 
 using namespace std;
@@ -19,6 +20,24 @@ double getEndingProb(int phoneIndex, int state) {
 // 해당 phone에서 state s -> state d transition 확률
 double getTransProb(int phoneIndex, int s, int d) {
     return phones[phoneIndex].tp[s + 1][d + 1];
+}
+
+void applyLogScale() {
+    int i, v, p, s;
+
+    for (i = 0; i < beginningTransitions.size(); i++) {
+        beginningTransitions[i].prob = log(beginningTransitions[i].prob);
+    }
+
+    for (v = 0; v < N_VOCA; v++) {
+        for (p = 0; p < MAX_PHONES; p++) {
+            for (s = 0; s < N_STATE; s++) {
+                for (i = 0; i < transitions[v][p][s].size(); i++) {
+                    transitions[v][p][s][i].prob = log(transitions[v][p][s][i].prob);
+                }
+            }
+        }
+    }
 }
 
 void initAllTransitions() {
@@ -138,4 +157,6 @@ void initAllTransitions() {
             }
         }
     }
+
+    applyLogScale();
 }

@@ -13,7 +13,7 @@ struct transitionType {
     int phone;
     int state;
 
-    // transition probability
+    // log transition probability
     double prob;
 };
 
