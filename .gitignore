@@ -35,8 +35,6 @@ main
 *.lib
 
 # Executables
-*.exe
-*.out
 *.app
 
 ### Git ###
