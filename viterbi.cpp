@@ -5,7 +5,7 @@ using namespace std;
 valueType values[MAX_TIME_LENGTH][N_VOCA][MAX_PHONES][N_STATE];
 
 void resetValues(size_t length) {
-	size_t t;
+    size_t t;
     int v, p, s;
     for (t = 0; t < length; t++) {
         for (v = 0; v < N_VOCA; v++) {

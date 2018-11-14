@@ -14,7 +14,7 @@ size_t length;
 double spectrogram[MAX_TIME_LENGTH][N_DIMENSION];
 
 void readTestInput(string path) {
-    ifstream inFile("output.txt", ios::in);
+    ifstream inFile(path, ios::in);
     size_t t, d, dimension;
 
     inFile >> length >> dimension;
@@ -26,10 +26,10 @@ void readTestInput(string path) {
     }
 }
 
-string&& getRecName(string s) {
-    string::size_type i = s.rfind('.txt', s.length());
+void getRecName(string s, string &out) {
+    string::size_type i = s.rfind(".txt", s.length());
     if (i != string::npos) {
-        return s.replace(i, 4, ".rec");
+        out = s.replace(i, 4, ".rec");
     }
 }
 
@@ -41,6 +41,7 @@ void runAllTests() {
     vector<string>::iterator inputPath;
     size_t count = 0;
     double percent;
+    string outputPath;
 
     for (inputPath = inputPaths.begin(); inputPath != inputPaths.end(); inputPath++) {
         count++;
@@ -50,7 +51,8 @@ void runAllTests() {
         }
         readTestInput(*inputPath);
 
-        outFile << getRecName(*inputPath) << endl;
+        getRecName(*inputPath, outputPath);
+        outFile << outputPath << endl;
 
         vector<string> result;
 
@@ -60,9 +62,8 @@ void runAllTests() {
         for (word = result.begin(); word != result.end(); word++) {
             if (*word == "<s>") {
                 continue;
-            } else {
-                outFile << *word << endl;
             }
+            outFile << *word << endl;
         }
         outFile << "." << endl;
     }
