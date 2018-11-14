@@ -29,7 +29,7 @@ void readTestInput(string path) {
 void getRecName(string s, string &out) {
     string::size_type i = s.rfind(".txt", s.length());
     if (i != string::npos) {
-        out = s.replace(i, 4, ".rec");
+        out = "\"" + s.replace(i, 4, ".rec") + "\"";
     }
 }
 
