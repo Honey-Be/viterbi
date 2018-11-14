@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include "fileutil.h"
@@ -10,61 +10,67 @@ using namespace std;
 
 vector<string> inputPaths;
 
-int length;
+size_t length;
 double spectrogram[MAX_TIME_LENGTH][N_DIMENSION];
 
 void readTestInput(string path) {
-    FILE *in = fopen(path.c_str(), "r");
-    int t, d, dimension;
+    ifstream inFile("output.txt", ios::in);
+    size_t t, d, dimension;
 
-    fscanf(in, "%d%d", &length, &dimension);
+    inFile >> length >> dimension;
 
     for (t = 0; t < length; t++) {
         for (d = 0; d < dimension; d++) {
-            fscanf(in, "%lf", &spectrogram[t][d]);
+            inFile >> spectrogram[t][d];
         }
     }
-
-    fclose(in);
 }
 
-string getRecName(string inputPath) {
-    size_t pos = inputPath.find(".txt");
-    return '\"' + inputPath.replace(pos, 4, ".rec") + '\"';
+string&& getRecName(string s) {
+    string::size_type i = s.rfind('.txt', s.length());
+    if (i != string::npos) {
+        return s.replace(i, 4, ".rec");
+    }
 }
 
 void runAllTests() {
-    FILE *out = fopen("recognized.txt", "w");
-
-    fprintf(out, "#!MLF!#\n");
+    ofstream outFile("recognized.txt");
+    
+    outFile << "#!MLF!#" << endl;
 
     vector<string>::iterator inputPath;
-    int count = 0;
+    size_t count = 0;
+    double percent;
+
     for (inputPath = inputPaths.begin(); inputPath != inputPaths.end(); inputPath++) {
         count++;
-        if(count % 60 == 0) printf("%.2lf%%..\n", (double)count / (double)inputPaths.size() * 100);
+        if(count % 60 == 0) {
+            percent = (double)count / (double)inputPaths.size() * 100;
+            cout << percent << "%.." << endl;
+        }
         readTestInput(*inputPath);
 
-        fprintf(out, "%s\n", getRecName(*inputPath).c_str());
-                
+        outFile << getRecName(*inputPath) << endl;
+
         vector<string> result;
+
         runViterbi(length, spectrogram, result);
-        
+
         vector<string>::iterator word;
         for (word = result.begin(); word != result.end(); word++) {
-            if (*word == "<s>") continue;
-            fprintf(out, "%s\n", word->c_str());
+            if (*word == "<s>") {
+                continue;
+            } else {
+                outFile << *word << endl;
+            }
         }
-        fprintf(out, ".\n");
+        outFile << "." << endl;
     }
 
-    printf("100%%\n");
-
-    fclose(out);
+    cout << "100%" << endl;
 }
 
-int main()
-{
+int main() {
     initAllTransitions();
     listAllInputPaths(inputPaths);
     runAllTests();

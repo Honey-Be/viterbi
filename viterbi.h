@@ -1,6 +1,7 @@
 #ifndef VITERBI_H_
 #define VITERBI_H_
 
+#include <iostream>
 #include "transition.h"
 #include "observation.h"
 
@@ -17,6 +18,6 @@ struct valueType {
 
 extern valueType values[MAX_TIME_LENGTH][N_VOCA][MAX_PHONES][N_STATE];
 
-void runViterbi(int length, double spectrogram[][N_DIMENSION], vector<string> &result);
+void runViterbi(size_t length, double spectrogram[][N_DIMENSION], vector<string> &result);
 
 #endif

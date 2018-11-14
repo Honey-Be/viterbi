@@ -4,8 +4,9 @@ using namespace std;
 
 valueType values[MAX_TIME_LENGTH][N_VOCA][MAX_PHONES][N_STATE];
 
-void resetValues(int length) {
-    int t, v, p, s;
+void resetValues(size_t length) {
+	size_t t;
+    int v, p, s;
     for (t = 0; t < length; t++) {
         for (v = 0; v < N_VOCA; v++) {
             for (p = 0; p < MAX_PHONES; p++) {
@@ -30,7 +31,7 @@ void memoizeObservationProbs(double spectrum[]) {
     }
 }
 
-valueType getMaxValue(int lastTimeIndex) {
+valueType getMaxValue(size_t lastTimeIndex) {
     int v, p, s;
     valueType max;
     max.isAssigned = false;
@@ -54,18 +55,21 @@ valueType getMaxValue(int lastTimeIndex) {
     return max;
 }
 
-void backtrace(int t, int v, int p, int s, vector<string> &result) {
-    if (t < 0) return;
-    
+void backtrace(size_t t, int v, int p, int s, vector<string> &result) {
     valueType *value = &values[t][v][p][s];
-    backtrace(t-1, value->prevVoca, value->prevPhone, value->prevState, result);
 
-    if (value->wordChanged)
+    if(t > 0) {
+        backtrace(t-1, value->prevVoca, value->prevPhone, value->prevState, result);
+    }
+
+    if (value->wordChanged) {
         result.push_back(vocas[value->prevVoca].name);
+    }
 }
 
-void runViterbi(int length, double spectrogram[][N_DIMENSION], vector<string> &result) {
-    int t, v, p, s;
+void runViterbi(size_t length, double spectrogram[][N_DIMENSION], vector<string> &result) {
+    size_t t;
+    int v, p, s;
     vector<transitionType>::iterator trans;
     valueType * value;
     double currentProb, prevProb;
